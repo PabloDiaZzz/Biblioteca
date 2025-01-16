@@ -164,12 +164,78 @@ public class Biblioteca2025 {
 	}
 
 	private void nuevoLibro() {
+		Scanner sc = new Scanner(System.in);
+		String isbn;
+		do {
+			isbn = solicitaIsbn();
+		} while (!isbn.matches("\\d+-\\d+"));
+		System.out.println("Teclea el titulo del libro:");
+		String titulo = sc.nextLine();
+		System.out.println("Teclea el autor del libro:");
+		String autor = sc.nextLine();
+		System.out.println("Teclea el genero del libro:");
+		String genero = sc.nextLine();
+		System.out.println("Teclea el numero de ejemplares del libro:");
+		int ejemplares = sc.nextInt();
+		libros.add(new Libro(isbn, titulo, autor, genero, ejemplares));
 	}
 
 	private void eliminarLibro() {
+		System.out.println("Que libro deseas eliminar");
+		listaLibros();
+		int pos = buscaIsbn(solicitaIsbn());
+		if (pos == -1) {
+			System.out.println("No se encuentra ese libro");
+		} else {
+			libros.remove(pos);
+			System.out.println("Libro eliminado");
+		}
 	}
 
 	private void modificarLibros() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Que libro deseas modificar");
+		listaLibros();
+		int pos = buscaIsbn(solicitaIsbn());
+		if (pos == -1) {
+			System.out.println("No se encuentra ese libro");
+		} else {
+			System.out.println("Libro encontrado:");
+			Libro l = libros.get(pos);
+			System.out.println(l);
+			System.out.println();
+			System.out.println("Teclea el titulo del libro:");
+			String isbn = sc.nextLine();
+			if (isbn.isBlank()) {
+				isbn = l.getIsbn();
+			}
+			l.setIsbn(isbn);
+			System.out.println("Teclea el titulo del libro:");
+			String titulo = sc.nextLine();
+			if (titulo.isBlank()) {
+				titulo = l.getTitulo();
+			}
+			l.setTitulo(titulo);
+			System.out.println("Teclea el autor del libro:");
+			String autor = sc.nextLine();
+			if (autor.isBlank()) {
+				autor = l.getAutor();
+			}
+			l.setAutor(autor);
+			System.out.println("Teclea el genero del libro:");
+			String genero = sc.nextLine();
+			if (genero.isBlank()) {
+				genero = l.getGenero();
+			}
+			l.setGenero(genero);
+			System.out.println("Teclea numero de ejemplares del libro:");
+			String ejemplares = sc.next();
+			if (ejemplares.isBlank()) {
+				ejemplares = String.valueOf(l.getEjemplares());
+			}
+			l.setEjemplares(Integer.parseInt(ejemplares));
+			libros.set(pos, l);
+		}
 	}
 
 	private void listaLibros() {
@@ -353,7 +419,7 @@ public class Biblioteca2025 {
 	 * @return (String) isbn del libro tecleado
 	 */
 	public String solicitaIsbn(){
-		Scanner sc=new Scanner(System.in);
+		Scanner sc = new Scanner(System.in);
 		System.out.println("Teclea el isbn del libro:");
 		return sc.next();
 	}
