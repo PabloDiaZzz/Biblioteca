@@ -155,9 +155,11 @@ public class Biblioteca2025 {
 				}
 				case 7:{
 					libroMasLeido();
+					break;
 				}
 				case 8:{
-//					usuarioMasLector();
+					usuarioMasLector();
+					break;
 				}
 			}
 		}while (opcion != 9);
@@ -204,7 +206,7 @@ public class Biblioteca2025 {
 			Libro l = libros.get(pos);
 			System.out.println(l);
 			System.out.println();
-			System.out.println("Teclea el titulo del libro:");
+			System.out.println("Teclea el isbn del libro:");
 			String isbn = sc.nextLine();
 			if (isbn.isBlank()) {
 				isbn = l.getIsbn();
@@ -245,15 +247,79 @@ public class Biblioteca2025 {
 	}
 
 	private void nuevoUsuario() {
+		Scanner sc = new Scanner(System.in);
+		String dni;
+		do {
+			dni = solicitaDni();
+		} while (!dni.matches("\\d{2}"));
+		System.out.println("Teclea el nombre del usuario:");
+		String nombre = sc.nextLine();
+		System.out.println("Teclea el email del usuario:");
+		String email = sc.nextLine();
+		String tlfn;
+		do {
+			System.out.println("Teclea el numero de telefono del usuario:");
+			tlfn = sc.next();
+		} while (!tlfn.matches("\\d{9}"));
+		usuarios.add(new Usuario(dni, nombre, email, tlfn));
 	}
 
 	private void eliminarUsuario() {
+		System.out.println("Que usuario deseas eliminar");
+		listaUsuarios();
+		int pos = buscaDni(solicitaDni());
+		if (pos == -1) {
+			System.out.println("No se encuentra ese usuario");
+		} else {
+			usuarios.remove(pos);
+			System.out.println("Usuario eliminado");
+		}
 	}
 
 	private void modificarUsuario() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Que usuario deseas modificar");
+		listaUsuarios();
+		int pos = buscaDni(solicitaDni());
+		if (pos == -1) {
+			System.out.println("No se encuentra ese usuario");
+		} else {
+			System.out.println("Usuario encontrado:");
+			Usuario u = usuarios.get(pos);
+			System.out.println(u);
+			System.out.println();
+			System.out.println("Teclea el dni:");
+			String dni = sc.nextLine();
+			if (dni.isBlank()) {
+				dni = u.getDni();
+			}
+			u.setDni(dni);
+			System.out.println("Teclea el nombre:");
+			String nombre = sc.nextLine();
+			if (nombre.isBlank()) {
+				nombre = u.getNombre();
+			}
+			u.setNombre(nombre);
+			System.out.println("Teclea el email:");
+			String mail = sc.nextLine();
+			if (mail.isBlank()) {
+				mail = u.getEmail();
+			}
+			u.setEmail(mail);
+			System.out.println("Teclea el telefono:");
+			String tlfn = sc.nextLine();
+			if (tlfn.isBlank()) {
+				tlfn = u.getTelefono();
+			}
+			u.setTelefono(tlfn);
+			usuarios.set(pos, u);
+		}
 	}
 
 	private void listaUsuarios() {
+		for (Usuario u : usuarios) {
+			System.out.println(u);
+		}
 	}
 
 	private void nuevoPrestamo() {
@@ -400,12 +466,34 @@ public class Biblioteca2025 {
 		if (usos.stream().sorted().dropWhile(v -> v != Collections.max(usos)).count()>1){
 			System.out.println("Los libros mas leidos, con " +Collections.max(usos)+ " prestamos son:");
 			for (Map.Entry<Libro, Integer> entry : usosLibros.entrySet()) {
-				if (entry.getValue().equals(Collections.max(usos))){
+				if (Objects.equals(entry.getValue(), Collections.max(usos))){
 					System.out.println(entry.getKey());
 				}
 			}
 		} else {
 			System.out.println("El libro mas leido es: "+libros.get(usos.indexOf(Collections.max(usos)))+" con "+Collections.max(usos)+" prestamos");
+		}
+	}
+
+	public void usuarioMasLector(){
+		HashMap<Usuario, Integer> leidos = new HashMap<>();
+		for (Prestamo p : prestamos) {
+			leidos.put(p.getUsuarioPrest(), leidos.getOrDefault(p.getUsuarioPrest(), 0)+1);
+		}
+		for (Prestamo p : prestamosHist) {
+			leidos.put(p.getUsuarioPrest(), leidos.getOrDefault(p.getUsuarioPrest(), 0)+1);
+		}
+		ArrayList<Integer> usos = new ArrayList<>(leidos.values());
+
+		if (usos.stream().sorted().dropWhile(v -> v != Collections.max(usos)).count()>1){
+			System.out.println("Los usuarios mas lectores, con " +Collections.max(usos)+ " libros leidos son:");
+			for (Map.Entry<Usuario, Integer> entry : leidos.entrySet()) {
+				if (entry.getValue().equals(Collections.max(usos))){
+					System.out.println(entry.getKey());
+				}
+			}
+		} else {
+			System.out.println("El usuario mas lector es: "+libros.get(usos.indexOf(Collections.max(usos)))+" con "+Collections.max(usos)+" libros leidos");
 		}
 	}
 
@@ -474,7 +562,6 @@ public class Biblioteca2025 {
 		return pos;
 	}
 
-
 	public void cargaDatos(){
 
 		libros.add(new Libro("1-11","El Hobbit","JRR Tolkien","Aventuras",3));
@@ -497,11 +584,22 @@ public class Biblioteca2025 {
 
 		LocalDate hoy= LocalDate.now();
 		prestamos.add(new Prestamo(libros.get(0),usuarios.get(0), hoy.minusDays(20),hoy.minusDays(5)));
-		prestamos.add(new Prestamo(libros.get(1),usuarios.get(0), hoy,hoy.plusDays(15)));
-		prestamos.add(new Prestamo(libros.get(5),usuarios.get(4), hoy,hoy.plusDays(15)));
+		prestamos.add(new Prestamo(libros.get(0),usuarios.get(0), hoy,hoy.plusDays(15)));
+		prestamos.add(new Prestamo(libros.get(5),usuarios.get(0), hoy,hoy.plusDays(15)));
 		prestamos.add(new Prestamo(libros.get(5),usuarios.get(0), hoy.minusDays(20),hoy.minusDays(5)));
-		prestamos.add(new Prestamo(libros.get(6),usuarios.get(2), hoy,hoy.plusDays(15)));
-		prestamos.add(new Prestamo(libros.get(2),usuarios.get(1), hoy,hoy.plusDays(15)));
+		prestamos.add(new Prestamo(libros.get(1),usuarios.get(4), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamos.add(new Prestamo(libros.get(2),usuarios.get(4), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamos.add(new Prestamo(libros.get(3),usuarios.get(4), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamos.add(new Prestamo(libros.get(6),usuarios.get(4), hoy,hoy.plusDays(15)));
+		prestamos.add(new Prestamo(libros.get(6),usuarios.get(1), hoy,hoy.plusDays(15)));
+
+		prestamosHist.add(new Prestamo(libros.get(0),usuarios.get(0), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamosHist.add(new Prestamo(libros.get(2),usuarios.get(0), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamosHist.add(new Prestamo(libros.get(7),usuarios.get(4), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamosHist.add(new Prestamo(libros.get(5),usuarios.get(4), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamosHist.add(new Prestamo(libros.get(1),usuarios.get(1), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamosHist.add(new Prestamo(libros.get(7),usuarios.get(2), hoy.minusDays(20),hoy.minusDays(5)));
+		prestamosHist.add(new Prestamo(libros.get(6),usuarios.get(3), hoy.minusDays(20),hoy.minusDays(5)));
 	}
 
 }
