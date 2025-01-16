@@ -26,11 +26,7 @@ public class Biblioteca2025 {
 		Scanner sc=new Scanner (System.in);
 		int opcion;
 		do{
-			System.out.println("\n\n\n\n\n\t\t\t\tBIBLIOTECA\n");
-			System.out.println("\t\t\t\t1 - LIBROS");
-			System.out.println("\t\t\t\t2 - USUARIOS");
-			System.out.println("\t\t\t\t3 - PRESTAMOS");
-			System.out.println("\t\t\t\t9 - SALIR");
+			options(true, new String[] {"LIBROS", "USUARIOS", "PRESTAMOS", "", "", "", "", "", "SALIR"});
 			opcion=sc.nextInt();
 			switch (opcion){
 				case 1:{
@@ -53,12 +49,8 @@ public class Biblioteca2025 {
 		Scanner sc=new Scanner (System.in);
 		int opcion;
 		do{
-			System.out.println("\n\n\n\n\n\t\t\t\tLIBROS\n");
-			System.out.println("\t\t\t\t1 - NUEVO LIBRO");
-			System.out.println("\t\t\t\t2 - ELIMINAR LIBRO");
-			System.out.println("\t\t\t\t3 - MODIFICAR LIBRO");
-			System.out.println("\t\t\t\t4 - LISTADOS");
-			System.out.println("\t\t\t\t9 - SALIR");
+			System.out.println("\n\nLIBROS\n");
+			options(true, new String[] {"NUEVO LIBRO", "ELIMINAR LIBRO", "MODIFICAR LIBRO", "LISTADOS", "", "", "", "", "SALIR"});
 			opcion=sc.nextInt();
 			switch (opcion){
 				case 1:{
@@ -85,12 +77,8 @@ public class Biblioteca2025 {
 		Scanner sc=new Scanner (System.in);
 		int opcion;
 		do{
-			System.out.println("\n\n\n\n\n\t\t\t\tUSUARIOS");
-			System.out.println("\t\t\t\t1 - NUEVO USUARIO");
-			System.out.println("\t\t\t\t2 - ELIMINAR USUARIO");
-			System.out.println("\t\t\t\t3 - MODIFICAR USUARIO");
-			System.out.println("\t\t\t\t4 - LISTADOS");
-			System.out.println("\t\t\t\t9 - SALIR");
+			System.out.println("\n\nUSUARIOS\n");
+			options(true, new String[] {"NUEVO USUARIO", "ELIMINAR USUARIO", "MODIFICAR USUARIO", "LISTADOS", "", "", "", "", "SALIR"});
 			opcion=sc.nextInt();
 			switch (opcion){
 				case 1:{
@@ -117,16 +105,8 @@ public class Biblioteca2025 {
 		Scanner sc=new Scanner (System.in);
 		int opcion;
 		do{
-			System.out.println("\n\n\n\n\n\t\t\t\tPRESTAMOS\n");
-			System.out.println("\t\t\t\t1 - NUEVO PRESTAMO");
-			System.out.println("\t\t\t\t2 - DEVOLUCION PRESTAMO");
-			System.out.println("\t\t\t\t3 - PRORROGAR PRESTAMO");
-			System.out.println("\t\t\t\t4 - LISTADO GENERAL PRESTAMOS");
-			System.out.println("\t\t\t\t5 - LISTADO PRESTAMOS USUARIO");
-			System.out.println("\t\t\t\t6 - LISTADO PRESTAMOS LIBRO (USUARIOS QUE LO LEEN)");
-			System.out.println("\t\t\t\t7 - LIBRO MAS LEIDO");
-			System.out.println("\t\t\t\t8 - USUARIO MAS LECTOR");
-			System.out.println("\t\t\t\t9 - SALIR");
+			System.out.println("\n\nPRESTAMOS\n");
+			options(true, new String[] {"NUEVO PRESTAMO", "DEVOLUCION PRESTAMO", "PRORROGAR PRESTAMO", "LISTADO GENERAL PRESTAMOS", "LISTADO PRESTAMOS USUARIO", "LISTADO PRESTAMOS LIBRO (USUARIOS QUE LO LEEN)", "LIBRO MAS LEIDO", "USUARIO MAS LECTOR", "SALIR"});
 			opcion=sc.nextInt();
 			switch (opcion){
 				case 1:{
@@ -367,11 +347,9 @@ public class Biblioteca2025 {
 
 	private void prorroga() {
 		System.out.println("Datos para la prorroga del préstamo:");
-
 		String dni = solicitaDni();
 		String isbn = solicitaIsbn();
 		int pos=buscaPrestamo(dni,isbn);
-		//int pos=buscaPrestamo(solicitaDni(),solicitaIsbn());
 		if (pos==-1){
 			System.out.println("No hay ningun préstamo con esos datos");
 		}else{
@@ -502,6 +480,7 @@ public class Biblioteca2025 {
 		System.out.println("Teclea el dni del usuario:");
 		return sc.next();
 	}
+
 	/**
 	 * Método para solicitar por teclado el ISBN de un libro. pdte de validación
 	 * @return (String) isbn del libro tecleado
@@ -602,4 +581,37 @@ public class Biblioteca2025 {
 		prestamosHist.add(new Prestamo(libros.get(6),usuarios.get(3), hoy.minusDays(20),hoy.minusDays(5)));
 	}
 
+	public static void options(boolean input,String[] a) {
+		int maxValue = 0;
+		for (int i = 0; i < a.length; i++) {
+			maxValue = Math.max(maxValue, String.valueOf(a.length).length() - String.valueOf(i).length() + ((input ? i + ". " : "") + a[i]).length());
+
+		}
+		System.out.print('╔');
+		for (int x = 0; x < maxValue + 2; x++) {
+			System.out.print('═');
+		}
+		System.out.println('╗');
+		int contador = 1;
+		for (String s : a) {
+			System.out.print("║ ");
+			int espacios = String.valueOf(a.length).length() - String.valueOf(contador).length();
+			for (int x = 0; x < espacios; x++) {
+				System.out.print(" ");
+			}
+			System.out.print(input ? contador + ". " : "");
+			System.out.print(s);
+			for (int y = 0; y < 1 + maxValue - ((input ? espacios : 0) + (input ? contador + ". " + s : s).length()); y++) {
+				System.out.print(' ');
+			}
+			System.out.println("║");
+			contador++;
+		}
+		System.out.print('╚');
+		for (int x = 0; x < maxValue + 2; x++) {
+			System.out.print('═');
+		}
+		System.out.println('╝');
+		System.out.print(input ? ">> " : "");
+	}
 }
