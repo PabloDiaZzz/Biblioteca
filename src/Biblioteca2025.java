@@ -183,6 +183,8 @@ public class Biblioteca2025 {
 			System.out.println("No se encuentra ese libro");
 		} else {
 			System.out.println("Libro encontrado:");
+			System.out.println();
+			System.out.println("[Deja el campo en blanco para no modificarlo]");
 			Libro l = libros.get(pos);
 			System.out.println(l);
 			System.out.println();
@@ -265,6 +267,8 @@ public class Biblioteca2025 {
 			System.out.println("No se encuentra ese usuario");
 		} else {
 			System.out.println("Usuario encontrado:");
+			System.out.println();
+			System.out.println("[Deja el campo en blanco para no modificarlo]");
 			Usuario u = usuarios.get(pos);
 			System.out.println(u);
 			System.out.println();
